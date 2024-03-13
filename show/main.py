@@ -2128,6 +2128,21 @@ def peer(db, peer_ip):
     click.echo(tabulate(bfd_body, bfd_headers))
 
 
+# 'uft-profile' command ("show uft-profile")
+@cli.command('uft-profile')
+@clicommon.pass_db
+def uft_profile(db):
+    """Show uft_profile"""
+
+    config_db = connect_config_db()
+    data = config_db.get_entry('DEVICE_METADATA', 'localhost')
+    uft_profile = data.get('uft_profile', None)
+    if uft_profile != None:
+        click.echo("Current uft_profile: {}".format(uft_profile))
+    else:
+        click.echo("Using default uft_profile: balanced_profile_1")
+
+
 # Load plugins and register them
 helper = util_base.UtilHelper()
 helper.load_and_register_plugins(plugins, cli)

@@ -2068,6 +2068,21 @@ def yang_config_validation(yang_config_validation):
     click.echo("""Wrote %s yang config validation into CONFIG_DB""" % yang_config_validation)
 
 #
+# 'uft-profile' command('config uft-profile ...')
+#
+@config.command('uft-profile')
+@click.argument('uft_profile_mode', metavar='<l2_profile|l3_profile|balanced_profile_1|balanced_profile_2>', required=True)
+def uft_profile(uft_profile_mode):
+    if uft_profile_mode == 'l2_profile' or uft_profile_mode == 'l3_profile' \
+        or uft_profile_mode == 'balanced_profile_1' or uft_profile_mode == 'balanced_profile_2':
+        config_db = ConfigDBConnector()
+        config_db.connect()
+        config_db.mod_entry('DEVICE_METADATA' , 'localhost', {"uft_profile" : uft_profile_mode})
+        click.echo("""Wrote %s uft profile mode into CONFIG_DB, config save and reboot are required to apply the configuration.""" % uft_profile_mode)
+    else:
+        raise click.BadParameter("Error: Invalid argument %s, expect either l2_profile or l3_profile or balanced_profile_1 or balanced_profile_2" % uft_profile_mode)
+
+#
 # 'portchannel' group ('config portchannel ...')
 #
 @config.group(cls=clicommon.AbbreviationGroup)
